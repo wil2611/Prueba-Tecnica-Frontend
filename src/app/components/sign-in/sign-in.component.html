@@ -1,0 +1,40 @@
+<div class="wrapper">
+    <div *ngIf="!loading" class="body">
+        <img class="logo" src="../../../assets/img/login.png" alt="img login">
+        <h3>Registrar Usuario</h3>
+        <div class="form-floating mb-3 mt-3">
+            <input type="text" [(ngModel)]="email" class="form-control" placeholder="Email">
+            <label>Email</label>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input type="text" [(ngModel)]="name" class="form-control" placeholder="Name">
+            <label>Name</label>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input type="text" [(ngModel)]="lastname" class="form-control" placeholder="Lastname">
+            <label>LastName</label>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input type="text" [(ngModel)]="role" class="form-control" placeholder="Role">
+            <label>Role</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="password" [(ngModel)]="password" class="form-control" placeholder="Password">
+            <label>Password</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" [(ngModel)]="confirmPassword" class="form-control" placeholder="Repeat passwors">
+            <label>Repeat Password</label>
+        </div>
+        <select class="form-select mb-3" aria-label="Status" [(ngModel)]="status">
+            <option value="active" >active</option>
+            <option value="desactive">desactive</option>
+          </select>
+        <div class="d-grid gap-2 mb-3">
+            <button type="button" (click)="addUser()" class="btn btn-primary btn-lg">Aceptar</button>
+        </div>
+        <a routerLink="/login">Volver</a>
+    </div>
+    <app-spinner *ngIf="loading"></app-spinner>
+</div>

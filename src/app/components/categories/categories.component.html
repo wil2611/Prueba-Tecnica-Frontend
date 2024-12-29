@@ -1,0 +1,97 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+  <div class="row">
+    
+    <!-- Formulario de creación o edición de categoría -->
+    <div *ngIf="role" class="col-md-4">
+      <h2 *ngIf="!isEditing">Crear Nueva Categoría</h2>
+      <h2 *ngIf="isEditing">Editar Categoría</h2>
+      <form (ngSubmit)="isEditing ? updateCategory() : selectedCategory && createCategory(selectedCategory)">
+        <div class="form-group">
+          <label for="name">Nombre</label>
+          <input 
+            [(ngModel)]="selectedCategory.name" 
+            name="name" 
+            class="form-control" 
+            required 
+            *ngIf="selectedCategory" 
+            placeholder="Nombre de la categoría"
+          />
+        </div>
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <input 
+            [(ngModel)]="selectedCategory.description" 
+            name="description" 
+            class="form-control" 
+            *ngIf="selectedCategory" 
+            placeholder="Descripción de la categoría"
+          />
+        </div>
+        <div class="form-group">
+          <label for="status">Estado</label>
+          <select 
+            *ngIf="selectedCategory" 
+            [(ngModel)]="selectedCategory.status" 
+            name="status" 
+            class="form-control" 
+            required
+          >
+            <option value="active">Activo</option>
+            <option value="desactive">Desactivo</option>
+          </select>
+        </div>
+        <button 
+          type="submit" 
+          class="btn btn-primary mt-3"
+        >
+          {{ isEditing ? 'Actualizar' : 'Crear' }}
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-secondary mt-3" 
+          *ngIf="isEditing" 
+          (click)="cancelEdit()"
+        >
+          Cancelar
+        </button>
+      </form>
+    </div>
+
+    <!-- Buscar Categorías -->
+    <div class="col-md-8">
+      <h2>Buscar Categoría</h2>
+      <div class="form-group mb-3">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          class="form-control"
+          placeholder="Buscar por nombre"
+          (ngModelChange)="filterCategories()"
+        />
+      </div>
+      <h2>Categorías Existentes</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th *ngIf="role">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let items of categories">
+            <td>{{ items.name }}</td>
+            <td>{{ items.description }}</td>
+            <td>{{ items.status }}</td>
+            <td class="d-flex gap-3">
+              <button *ngIf="role" class="btn btn-warning" (click)="selectCategoryToEdit(items)">Editar</button>
+              <button *ngIf="role" class="btn btn-danger" (click)="deleteCategory(items.id!)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

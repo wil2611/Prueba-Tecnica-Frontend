@@ -1,0 +1,81 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+  <div class="row">
+    <!-- Formulario para crear o editar usuario -->
+    <div class="col-md-4">
+      <h2 *ngIf="!isEditing">Crear Usuario</h2>
+      <h2 *ngIf="isEditing">Editar Usuario</h2>
+      <form (ngSubmit)="saveUser()">
+        <div class="form-group">
+          <label for="name">Nombre</label>
+          <input *ngIf="selectedUser" [(ngModel)]="selectedUser.name" name="name" class="form-control" required
+            placeholder="Nombre del usuario" />
+        </div>
+        <div class="form-group">
+          <label for="lastname">Apellido</label>
+          <input *ngIf="selectedUser" [(ngModel)]="selectedUser.lastname" name="lastname" class="form-control" required
+            placeholder="Apellido del usuario" />
+        </div>
+        <div *ngIf="!isEditing" class="form-group">
+          <label for="password">password</label>
+          <input *ngIf="selectedUser" [(ngModel)]="selectedUser.password" name="password"class="form-control" required
+            placeholder="password" />
+        </div>
+        <div class="form-group">
+          <label for="email">Correo</label>
+          <input *ngIf="selectedUser" [(ngModel)]="selectedUser.email" name="email" class="form-control" required
+            type="email" placeholder="Correo del usuario" />
+        </div>
+        <div class="form-group">
+          <label for="role">Rol</label>
+          <select *ngIf="selectedUser" [(ngModel)]="selectedUser.role" name="role" class="form-control">
+            <option value="admin">Administrador</option>
+            <option value="user">Usuario</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="status">Estado</label>
+          <select *ngIf="selectedUser" [(ngModel)]="selectedUser.status" name="status" class="form-control">
+            <option value="active">Activo</option>
+            <option value="desactive">Inactivo</option>
+          </select>
+        </div>
+        <button class="btn btn-primary mt-3" type="submit">
+          {{ isEditing ? 'Actualizar' : 'Crear' }}
+        </button>
+        <button class="btn btn-secondary mt-3" type="button" *ngIf="isEditing" (click)="cancelEdit()">
+          Cancelar
+        </button>
+      </form>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <div class="col-md-8">
+      <h2>Usuarios</h2>
+      <input type="text" class="form-control mb-3" (ngModelChange)="searchTerms()" placeholder="Buscar por nombre o correo"  [(ngModel)]="searchTerm "  />
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.name }} {{ user.lastname }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.status }}</td>
+            <td class="d-flex gap-3">
+              <button class="btn btn-warning btn-sm" (click)="selectUserToEdit(user)">Editar</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteUser(user.id!)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

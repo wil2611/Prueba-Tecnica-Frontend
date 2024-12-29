@@ -1,0 +1,89 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+    <div class="row">
+
+        <!-- Formulario de creación o edición de tarea -->
+        <div *ngIf="role  || isEditing" class="col-md-4">
+            <h2 *ngIf="role && !isEditing">Crear Nueva Tarea</h2>
+            <h2 *ngIf="isEditing">Editar Tarea</h2>
+            <form  (ngSubmit)="isEditing ? updateTask() : selectedTask && createTask(selectedTask)">
+                <div *ngIf="role" class="form-group">
+                    <label for="title">Título</label>
+                    <input [(ngModel)]="selectedTask.title" name="title" class="form-control" required
+                        *ngIf="selectedTask" placeholder="Título de la tarea" />
+                </div>
+                <div *ngIf="role" class="form-group">
+                    <label for="description">Descripción</label>
+                    <input [(ngModel)]="selectedTask.description" name="description" class="form-control"
+                        *ngIf="selectedTask" placeholder="Descripción de la tarea" />
+                </div>
+                <div class="form-group">
+                    <label for="status">Estado</label>
+                    <select *ngIf="selectedTask" [(ngModel)]="selectedTask.status" name="status" class="form-control"
+                        required>
+                        <option value="pending">Pendiente</option>
+                        <option value="in progress">En Proceso</option>
+                        <option value="review">En Revisión</option>
+                        <option *ngIf="role" value="completed">Completada</option>
+                        <option *ngIf="role" value="deleted">Eliminada</option>
+                    </select>
+                </div>
+                <div *ngIf="role" class="form-group">
+                    <label for="assignedUserId">Usuario Asignado</label>
+                    <select *ngIf="selectedTask" [(ngModel)]="selectedTask.assignedUserId" name="assignedUserId"
+                        class="form-control" required>
+                        <option *ngFor="let users of users" [value]="users.id">{{ users.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="role" class="form-group">
+                    <label for="categoryId">Categoría</label>
+                    <select *ngIf="selectedTask" [(ngModel)]="selectedTask.categoryId" name="categoryId"
+                        class="form-control" required>
+                        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 ">
+                    {{ isEditing ? 'Actualizar' : 'Crear' }}
+                </button>
+                <button type="button" class="btn btn-secondary mt-3" *ngIf="isEditing" (click)="cancelEdit()">
+                    Cancelar
+                </button>
+            </form>
+        </div>
+
+        <!-- Buscar Tareas -->
+        <div class="col-md-8">
+            <h2>Buscar Tarea</h2>
+            <div class="form-group mb-3">
+                <input type="text" [(ngModel)]="searchTerm" class="form-control" placeholder="Buscar por título"
+                    (ngModelChange)="filterTasks()" />
+            </div>
+            <h2>Tareas Existentes</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th *ngIf="role" >Usuario</th>
+                        <th *ngIf="role" >Categoría</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let task of filteredTasks">
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{{ task.status }}</td>
+                        <td *ngIf="role">{{ task.assignedUser.name || 'Sin asignar' }}</td>
+                        <td *ngIf="role">{{ task.category.name || 'Sin categoría' }}</td>
+                        <td class="d-flex gap-3">
+                            <button class="btn btn-warning" (click)="selectTaskToEdit(task)">Editar</button>
+                            <button *ngIf="role" class="btn btn-danger" (click)="deleteTask(task.id!)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
